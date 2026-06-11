@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>獸醫藥物劑量換算器</title>
+    <link rel="stylesheet" href="vet-styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🐾 獸醫藥物劑量換算器</h1>
+            <p>專業的獸醫臨床劑量計算工具</p>
+        </header>
+
+        <main>
+            <!-- 標籤頁面 -->
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="basic-calc">基本換算</button>
+                <button class="tab-btn" data-tab="weight-based">體重比例計算</button>
+                <button class="tab-btn" data-tab="bsa-calc">BSA 計算</button>
+                <button class="tab-btn" data-tab="common-drugs">常用獸藥劑量</button>
+                <button class="tab-btn" data-tab="species-adjust">物種調整</button>
+                <button class="tab-btn" data-tab="dilution">稀釋計算</button>
+            </div>
+
+            <!-- 基本換算標籤 -->
+            <div id="basic-calc" class="tab-content active">
+                <div class="card">
+                    <h2>基本藥物劑量換算</h2>
+                    <div class="form-group">
+                        <label for="drug-name">藥物名稱：</label>
+                        <input type="text" id="drug-name" placeholder="例如：青黴素、阿莫西林">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="concentration">藥物濃度：</label>
+                            <div class="input-group">
+                                <input type="number" id="concentration" placeholder="濃度值" min="0" step="0.01">
+                                <select id="concentration-unit">
+                                    <option>mg/ml</option>
+                                    <option>mg/cc</option>
+                                    <option>%</option>
+                                    <option>IU/ml</option>
+                                    <option>µg/ml</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dose-needed">所需劑量：</label>
+                            <div class="input-group">
+                                <input type="number" id="dose-needed" placeholder="劑量值" min="0" step="0.01">
+                                <select id="dose-unit">
+                                    <option>mg</option>
+                                    <option>g</option>
+                                    <option>IU</option>
+                                    <option>µg</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn-calculate" onclick="calculateBasic()">計算用量</button>
+                    <div id="basic-result" class="result"></div>
+                </div>
+            </div>
+
+            <!-- 體重比例計算標籤 -->
+            <div id="weight-based" class="tab-content">
+                <div class="card">
+                    <h2>體重比例劑量計算</h2>
+                    <p class="info-text">根據動物體重計算相應的藥物劑量</p>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="animal-weight">動物體重 (kg)：</label>
+                            <input type="number" id="animal-weight" placeholder="體重" min="0" step="0.1">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dose-per-kg">每公斤劑量：</label>
+                            <div class="input-group">
+                                <input type="number" id="dose-per-kg" placeholder="mg/kg" min="0" step="0.1">
+                                <select id="dose-per-kg-unit">
+                                    <option>mg/kg</option>
+                                    <option>µg/kg</option>
+                                    <option>IU/kg</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="frequency">給藥頻率：</label>
+                            <select id="frequency">
+                                <option value="1">每天一次</option>
+                                <option value="2">每天兩次</option>
+                                <option value="3">每天三次</option>
+                                <option value="4">每天四次</option>
+                                <option value="8">每 8 小時一次</option>
+                                <option value="12">每 12 小時一次</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="treatment-days">治療天數：</label>
+                            <input type="number" id="treatment-days" placeholder="天" min="1" step="1" value="7">
+                        </div>
+                    </div>
+
+                    <button class="btn-calculate" onclick="calculateWeightBased()">計算���劑量</button>
+                    <div id="weight-result" class="result"></div>
+                </div>
+            </div>
+
+            <!-- BSA 計算標籤 -->
+            <div id="bsa-calc" class="tab-content">
+                <div class="card">
+                    <h2>體表面積 (BSA) 計算</h2>
+                    <p class="info-text">用於化療和特殊藥物的劑量調整</p>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="height">身長 (cm)：</label>
+                            <input type="number" id="height" placeholder="身長" min="0" step="0.1">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="weight">體重 (kg)：</label>
+                            <input type="number" id="weight" placeholder="體重" min="0" step="0.1">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dose-per-bsa">單位劑量 (mg/m²)：</label>
+                        <input type="number" id="dose-per-bsa" placeholder="劑量" min="0" step="0.01">
+                    </div>
+
+                    <button class="btn-calculate" onclick="calculateBSA()">計算 BSA 及劑量</button>
+                    <div id="bsa-result" class="result"></div>
+                </div>
+            </div>
+
+            <!-- 常用獸藥劑量標籤 -->
+            <div id="common-drugs" class="tab-content">
+                <div class="card">
+                    <h2>常用獸藥劑量參考</h2>
+                    <p class="info-text">點擊藥物快速計算</p>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="select-drug">選擇藥物：</label>
+                            <select id="select-drug" onchange="loadDrugInfo()">
+                                <option value="">-- 選擇藥物 --</option>
+                                <option value="amoxicillin">阿莫西林</option>
+                                <option value="penicillin">青黴素</option>
+                                <option value="doxycycline">強力黴素</option>
+                                <option value="enrofloxacin">恩諾沙星</option>
+                                <option value="gentamicin">慶大黴素</option>
+                                <option value="fluconazole">氟康唑</option>
+                                <option value="ibuprofen">布洛芬</option>
+                                <option value="meloxicam">美洛昔康</option>
+                                <option value="dexamethasone">地塞米松</option>
+                                <option value="prednisone">潑尼松</option>
+                                <option value="omeprazole">奧美拉唑</option>
+                                <option value="metronidazole">甲硝唑</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="animal-type">動物類型：</label>
+                            <select id="animal-type">
+                                <option value="dog">犬</option>
+                                <option value="cat">貓</option>
+                                <option value="rabbit">兔</option>
+                                <option value="hamster">倉鼠</option>
+                                <option value="bird">鳥</option>
+                                <option value="reptile">爬蟲</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="animal-weight-drug">動物體重 (kg)：</label>
+                            <input type="number" id="animal-weight-drug" placeholder="體重" min="0" step="0.1">
+                        </div>
+                    </div>
+
+                    <div id="drug-info" class="drug-info"></div>
+                    <button class="btn-calculate" onclick="calculateDrugDose()">計算劑量</button>
+                    <div id="drug-result" class="result"></div>
+                </div>
+            </div>
+
+            <!-- 物種調整標籤 -->
+            <div id="species-adjust" class="tab-content">
+                <div class="card">
+                    <h2>物種代謝調整</h2>
+                    <p class="info-text">根據物種代謝速率調整藥物劑量</p>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="base-species">參考物種 (犬)：</label>
+                            <input type="number" id="base-dose" placeholder="基礎劑量" min="0" step="0.1" value="10">
+                            <small>mg/kg (狗)</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="target-species">目標物種：</label>
+                            <select id="target-species">
+                                <option value="dog">犬 (1.0x)</option>
+                                <option value="cat">貓 (0.8x)</option>
+                                <option value="rabbit">兔 (0.7x)</option>
+                                <option value="hamster">倉鼠 (1.5x)</option>
+                                <option value="guinea-pig">天竺鼠 (0.8x)</option>
+                                <option value="bird">鳥 (2.0x)</option>
+                                <option value="reptile">爬蟲 (0.5x)</option>
+                                <option value="horse">馬 (0.6x)</option>
+                                <option value="cattle">牛 (0.5x)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button class="btn-calculate" onclick="calculateSpeciesAdjust()">計算調整劑量</button>
+                    <div id="species-result" class="result"></div>
+                </div>
+            </div>
+
+            <!-- 稀釋計算標籤 -->
+            <div id="dilution" class="tab-content">
+                <div class="card">
+                    <h2>藥物稀釋計算</h2>
+                    <p class="info-text">計算稀釋所需的溶劑量</p>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="original-conc">原始濃度：</label>
+                            <div class="input-group">
+                                <input type="number" id="original-conc" placeholder="濃度值" min="0" step="0.1">
+                                <span>%</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="desired-conc">所需濃度：</label>
+                            <div class="input-group">
+                                <input type="number" id="desired-conc" placeholder="濃度值" min="0" step="0.1">
+                                <span>%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="original-volume">原始用量：</label>
+                            <div class="input-group">
+                                <input type="number" id="original-volume" placeholder="用量" min="0" step="0.1">
+                                <select id="volume-unit">
+                                    <option>ml</option>
+                                    <option>cc</option>
+                                    <option>L</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn-calculate" onclick="calculateDilution()">計算稀釋量</button>
+                    <div id="dilution-result" class="result"></div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>⚠️ 免責聲明：此工具僅供獸醫教育和參考用途。請務必在獸醫的指導下使用。</p>
+            <p>不同動物對藥物的反應可能差異很大，請根據臨床經驗和個體情況調整。</p>
+        </footer>
+    </div>
+
+    <script src="vet-script.js"></script>
+</body>
+</html>
